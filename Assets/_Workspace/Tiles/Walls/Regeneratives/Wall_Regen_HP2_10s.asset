@@ -34,7 +34,7 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 0
-  orderInLayer: 0
+  orderInLayer: 1
   regenerativeWallPrefab: {fileID: 402195444346039318, guid: 2008b5ac487b84898a6f8200a77f944a, type: 3}
   healthCount: 2
   regenerateAfter: 10

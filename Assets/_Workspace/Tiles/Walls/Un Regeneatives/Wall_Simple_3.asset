@@ -34,6 +34,6 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 0
-  orderInLayer: 0
+  orderInLayer: 1
   wallPrefab: {fileID: 3359384042989524042, guid: 853f0f64b9a07431f957e2a949828085, type: 3}
   healthCount: 3

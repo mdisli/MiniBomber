@@ -15,7 +15,7 @@ namespace _Workspace.Scripts.TileMapClasses
         public DestructibleWall wallPrefab;
         
         [Header("Options")]
-        public int healthCount;
+        [Range(1,3)]public int healthCount;
         
         private void OnValidate()
         {
