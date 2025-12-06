@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 5139286743196081799}
   - component: {fileID: 402195444346039318}
   - component: {fileID: 8849644996722954055}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RegenerativeWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
