@@ -17,6 +17,7 @@ namespace _Workspace.Scripts.Animation
 
         [Header("Animation Settings")] 
         [SerializeField] private bool isLooping;
+        [SerializeField] private float animationFrameDuration;
 
         private CancellationTokenSource _cancellationTokenSource;
         #endregion
@@ -64,7 +65,7 @@ namespace _Workspace.Scripts.Animation
                 targetSpriteRenderer.sprite = spriteList[spriteIndex];
                 spriteIndex++;
 
-                await UniTask.Yield(cancellationToken);
+                await UniTask.Delay(TimeSpan.FromSeconds(animationFrameDuration), cancellationToken: cancellationToken);
             }
         }
     }

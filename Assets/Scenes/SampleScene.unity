@@ -3471,6 +3471,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1127953315}
+  - component: {fileID: 1127953317}
+  - component: {fileID: 1127953316}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3494,6 +3496,58 @@ Transform:
   - {fileID: 798253400}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1127953316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127953314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6668f0134c645deb33945b30ec09d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSpriteRenderer: {fileID: 798253401}
+  spriteList: []
+  isLooping: 1
+  animationFrameDuration: 0.09333338
+--- !u!114 &1127953317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127953314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b3fa5609304dddb7243e38803a3834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  spriteAnimator: {fileID: 1127953316}
+  rightWalkSprites:
+  - {fileID: 3395209463811955822, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: 2460240801060281538, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -2170469931753066782, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -7454021130407618321, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  leftWalkSprites:
+  - {fileID: -6040485447166625926, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: 1771597729766122940, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: 4392775512353645669, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -7270274162631217432, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  upWalkSprites:
+  - {fileID: -7587632153144869409, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -8128161463723708334, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -2276953218087101211, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -4106169400473018265, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  downWalkSprites:
+  - {fileID: 864885269507524701, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: 2649799354532637081, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -6180953497746829179, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  - {fileID: -6858737447367745198, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  idleWalkSprites:
+  - {fileID: 864885269507524701, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
 --- !u!1 &1814920344
 GameObject:
   m_ObjectHideFlags: 0
