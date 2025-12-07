@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45e1224a66c74078b14e73a4dce20e93, type: 3}
-  m_Name: Wall_Simple_3
+  m_Script: {fileID: 11500000, guid: c2bb2aeb210b40828737740733b26f5a, type: 3}
+  m_Name: SimpleWall_1
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 4707ec6bcb84fed428e044aa80a5e3e1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.33333334}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_Transform:
     e00: 1
     e01: 0
@@ -34,6 +34,8 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 0
-  orderInLayer: 1
-  wallPrefab: {fileID: 3359384042989524042, guid: 853f0f64b9a07431f957e2a949828085, type: 3}
-  healthCount: 3
+  WallData:
+    orderInLayer: 1
+    wallPrefab: {fileID: 3359384042989524042, guid: 853f0f64b9a07431f957e2a949828085, type: 3}
+    healthCount: 1
+    regenerateAfter: 3

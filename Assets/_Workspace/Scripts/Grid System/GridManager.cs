@@ -1,5 +1,6 @@
 using System;
 using _Workspace.Scripts.TileMapClasses;
+using _Workspace.Scripts.TileMapClasses.Data;
 using _Workspace.Scripts.Walls;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -46,21 +47,16 @@ namespace _Workspace.Scripts.Grid_System
                 
                 switch (tileBase)
                 {
-                    case DestructibleWallTile destructibleWallTile:
+                    case WallTile wallTile:
                     {
-                        var destructibleWall = Instantiate(destructibleWallTile.wallPrefab, worldPos, Quaternion.identity,destructibleParent);
+                        BaseWallData data = wallTile.WallData;
+                        
+                        BaseWall baseWall = Instantiate(wallTile.WallData.wallPrefab, worldPos, Quaternion.identity,destructibleParent);
 
-                        destructibleWall.Initialize(destructibleWallTile.healthCount, destructibleWallTile.orderInLayer);
+                        baseWall.Initialize(data);
                     
                         destructibleTilemap.SetTile(tilePos, null);
-                        break;
-                    }
-                    case RegenerativeWallTile regenerativeWallTile:
-                    {
-                        RegenerativeWall regenerativeWall = Instantiate(regenerativeWallTile.regenerativeWallPrefab, worldPos, Quaternion.identity, destructibleParent);
-                    
-                        regenerativeWall.Initialize(regenerativeWallTile.orderInLayer, regenerativeWallTile.healthCount, regenerativeWallTile.regenerateAfter);
-                        destructibleTilemap.SetTile(tilePos, null);
+                        
                         break;
                     }
                 }

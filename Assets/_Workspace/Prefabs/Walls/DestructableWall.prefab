@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallRenderer: {fileID: 6194522874605469362}
+  wallCollider: {fileID: 1101282981129952670}
 --- !u!61 &1101282981129952670
 BoxCollider2D:
   m_ObjectHideFlags: 0

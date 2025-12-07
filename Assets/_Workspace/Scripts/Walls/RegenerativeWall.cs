@@ -1,60 +1,43 @@
 using System;
 using _Workspace.Scripts.Interfaces;
+using _Workspace.Scripts.TileMapClasses.Data;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Workspace.Scripts.Walls
 {
-    public class RegenerativeWall : MonoBehaviour, IDamageable
+    public class RegenerativeWall :BaseWall
     {
         #region Variables
 
-        [Header("References")]
-        [SerializeField] private SpriteRenderer _spriteRenderer;
-        [SerializeField] private BoxCollider2D _boxCollider2D;
-        
-        private int _orderInLayer;
-        private int _maxHealthCount;
-        private int _currentHealthCount;
         private float _regenerateAfter;
-        
 
         #endregion
 
-        #region Initialization
+        #region Initializing
 
-        public void Initialize(int orderInLayer, int healthCount, float regenerateAfter)
+        public override void Initialize(BaseWallData data)
         {
-            _orderInLayer = orderInLayer;
-            _maxHealthCount = healthCount;
-            _currentHealthCount = healthCount;
-            _regenerateAfter = regenerateAfter;
+            base.Initialize(data);
             
-            _spriteRenderer.sortingOrder = _orderInLayer;
+            _regenerateAfter = data.regenerateAfter;
         }
 
         #endregion
-
-        public void TakeDamage(int amount)
-        {
-            _currentHealthCount -= amount;
-
-            if (_currentHealthCount <= 0)
-            {
-                RemoveAndStartCountDownForRegenerateAsync().Forget();
-            }
-        }
-
         private async UniTask RemoveAndStartCountDownForRegenerateAsync()
         {
-            _boxCollider2D.enabled = false;
+            wallCollider.enabled = false;
             transform.localScale = Vector3.zero;
             
             await UniTask.Delay(TimeSpan.FromSeconds(_regenerateAfter));
             
             _currentHealthCount = _maxHealthCount;
             transform.localScale = Vector3.one;
-            _boxCollider2D.enabled = true;
+            wallCollider.enabled = true;
+        }
+
+        public override void OnDestruct()
+        {
         }
     }
 }
