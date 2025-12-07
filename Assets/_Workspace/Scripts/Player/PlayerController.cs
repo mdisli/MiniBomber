@@ -118,7 +118,7 @@ namespace _Workspace.Scripts.Player
 
         private void PlayAnimationForState(MovementState movementState)
         {
-            spriteAnimator.SetSpriteList(movementState switch
+            var spriteSet = movementState switch
             {
                 MovementState.Idle => idleWalkSprites,
                 MovementState.WalkingUp => upWalkSprites,
@@ -126,9 +126,9 @@ namespace _Workspace.Scripts.Player
                 MovementState.WalkingLeft => leftWalkSprites,
                 MovementState.WalkingRight => rightWalkSprites,
                 _ => idleWalkSprites
-            });
+            };
             
-            spriteAnimator.StartAnimationAsync().Forget();
+            spriteAnimator.StartAnimationAsync(spriteSet).Forget();
         }
 
         #endregion

@@ -20,15 +20,18 @@ namespace _Workspace.Scripts.Bomb.Explosion
 
         public void InitializeExplosion(ExplosionState  state)
         {
-            spriteAnimator.SetSpriteList(state switch
+            var spriteSet = state switch
             {
                 ExplosionState.Start => explosionStartSprites,
                 ExplosionState.Mid => explosionMiddleSprites,
                 ExplosionState.End => explosionEndSprites,
                 _ => explosionStartSprites
-            });
+            };
             
-            spriteAnimator.StartAnimationAsync(()=> Destroy(gameObject)).Forget();
+            spriteAnimator.StartAnimationAsync(
+                spriteSet:spriteSet,
+                onComplete:()=> Destroy(gameObject))
+                .Forget();
         }
 
         #endregion

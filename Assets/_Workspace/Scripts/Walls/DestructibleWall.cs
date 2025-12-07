@@ -4,9 +4,13 @@ namespace _Workspace.Scripts.Walls
     {
         #region Abstracts
 
-        public override void OnDestruct()
+        protected override void OnDestruct()
         {
             Destroy(gameObject);
+        }
+
+        protected override void OnDamage()
+        {
         }
 
         #endregion

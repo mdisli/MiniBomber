@@ -29,8 +29,7 @@ namespace _Workspace.Scripts.Bomb
 
         public virtual async UniTask StartTimer()
         {
-            spriteAnimator.SetSpriteList(countDownAnimationSprites);
-            spriteAnimator.StartAnimationAsync().Forget();
+            spriteAnimator.StartAnimationAsync(countDownAnimationSprites).Forget();
 
             await UniTask.Delay(TimeSpan.FromSeconds(bombVariables.explosionDelay));
             
@@ -39,7 +38,7 @@ namespace _Workspace.Scripts.Bomb
             Explode();
         }
 
-        public virtual void Explode()
+        protected virtual void Explode()
         {
             transform.localScale = Vector3.zero;
             Vector2 curPos = transform.position;

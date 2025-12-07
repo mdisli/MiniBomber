@@ -37,9 +37,12 @@ namespace _Workspace.Scripts.Walls
         public virtual void TakeDamage(int amount)
         {
             _currentHealthCount -= amount;
+            
+            OnDamage();
+            
             if (_currentHealthCount <= 0)
             {
-                Destroy(gameObject);
+                OnDestruct();
             }
         }
 
@@ -47,12 +50,9 @@ namespace _Workspace.Scripts.Walls
 
         #region Abstracts
 
-        public virtual void OnDamage()
-        {
-            wallRenderer.DOFade((float)_currentHealthCount/_maxHealthCount, 0.1f);
-        }
+        protected abstract void OnDamage();
 
-        public abstract void OnDestruct();
+        protected abstract void OnDestruct();
 
         #endregion
     }

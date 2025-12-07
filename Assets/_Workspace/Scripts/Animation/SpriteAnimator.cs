@@ -24,12 +24,19 @@ namespace _Workspace.Scripts.Animation
 
         #region Public Funcs
 
-        public void SetSpriteList(Sprite[] newSpriteList) => this.spriteList = newSpriteList;
+        private void SetSpriteList(Sprite[] newSpriteList) => this.spriteList = newSpriteList;
 
-        public async UniTask StartAnimationAsync(Action onComplete=null)
+        public async UniTask StartAnimationAsync(Sprite[] spriteSet=null,Action onComplete=null, Action onStart=null)
         {
             StopAnimation();
+            
+            if(spriteSet is not null)
+                SetSpriteList(spriteSet);
+            
+            onStart?.Invoke();
+            
             await AnimateSpriteRenderer(_cancellationTokenSource.Token);
+            
             onComplete?.Invoke();
         }
 
