@@ -38,6 +38,8 @@ namespace _Workspace.Scripts.Walls
         {
             _currentHealthCount -= amount;
             
+            _currentHealthCount = Mathf.Clamp(_currentHealthCount, 0, _maxHealthCount);
+            
             OnDamage();
             
             if (_currentHealthCount <= 0)

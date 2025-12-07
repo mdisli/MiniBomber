@@ -31,7 +31,7 @@ namespace _Workspace.Scripts.Walls
 
         protected override void OnDamage()
         {
-            wallRenderer.DOFade((float)_maxHealthCount / _currentHealthCount, .1f).SetEase(Ease.Linear);
+            wallRenderer.DOFade((float)_currentHealthCount / _maxHealthCount, .1f).SetEase(Ease.Linear);
         }
 
         #endregion

@@ -19,7 +19,7 @@ namespace _Workspace.Scripts.Animation
         [SerializeField] private bool isLooping;
         [SerializeField] private float animationFrameDuration;
 
-        private CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         #endregion
 
         #region Public Funcs
@@ -62,6 +62,12 @@ namespace _Workspace.Scripts.Animation
         #endregion
         private async UniTask AnimateSpriteRenderer(CancellationToken cancellationToken)
         {
+            if (spriteList is null or { Length: 0 })
+            {
+                Debug.LogWarning("SpriteList is null",gameObject);
+                return;
+            }
+            
             int spriteIndex = 0;
             while (!cancellationToken.IsCancellationRequested)
             {

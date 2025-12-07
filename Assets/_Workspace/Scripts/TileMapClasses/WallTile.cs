@@ -12,6 +12,8 @@ namespace _Workspace.Scripts.TileMapClasses
         
         private void OnValidate()
         {
+            if(WallData is null) return;
+            
             float alphaValue = 1f / WallData.healthCount; // Can arttıkça şeffaflaşır
             var currentColor = color;
             currentColor.a = alphaValue;

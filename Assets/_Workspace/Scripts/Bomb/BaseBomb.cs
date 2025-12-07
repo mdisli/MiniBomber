@@ -86,7 +86,10 @@ namespace _Workspace.Scripts.Bomb
 
         private void ShowExplosion(Vector2 direction, Vector2 position, ExplosionState explosionState)
         {
-            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            float angle = 0;
+
+            if(direction != Vector2.zero)
+                angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Explosion.Explosion explosion =
                 Instantiate(explosionPrefab, position, Quaternion.AngleAxis(angle, Vector3.forward));
             
