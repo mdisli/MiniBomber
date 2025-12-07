@@ -26,6 +26,7 @@ namespace _Workspace.Scripts.Grid_System
         }
 
         #endregion
+        
         #region Funcs
 
         private void GenerateDestructible()
@@ -66,6 +67,11 @@ namespace _Workspace.Scripts.Grid_System
             }
         }
 
+        public Vector2 GetTileCenterWithPosition(Vector2 position)
+        {
+            var tilePosition = groundAndWallsTilemap.WorldToCell(position);
+            return groundAndWallsTilemap.GetCellCenterWorld(tilePosition);
+        }
         #endregion
     }
 }

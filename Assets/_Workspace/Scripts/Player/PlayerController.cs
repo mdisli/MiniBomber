@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Workspace.Scripts.Animation;
+using _Workspace.Scripts.Bomb;
+using _Workspace.Scripts.Grid_System;
 using _Workspace.Scripts.Scriptable_Objects;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Workspace.Scripts.Player
@@ -22,16 +25,14 @@ namespace _Workspace.Scripts.Player
         [Header("So References")]
         [SerializeField] private PlayerVariables playerVariables;
 
+        [Header("Other References")] 
+        [SerializeField] private GridManager gridManager;
+
         [Header("Movement")] 
         [SerializeField] private Rigidbody2D rigidbody2D;
-        [SerializeField] private Transform[] rayPoints;
-        [SerializeField]private float _rayDistance;
-        private float _movementSpeed;
-        private LayerMask _obstacleMask;
         
-        // Bomb
-        private int _bombCapacity;
-        private float _bombRegenDuration;
+        [Header("Bomb")] 
+        [SerializeField] private BaseBomb standardBombPrefab;
         
         private MovementState _currentMovementState;
         private List<MovementState> _inputStack = new List<MovementState>();
@@ -40,6 +41,7 @@ namespace _Workspace.Scripts.Player
         private bool OnRight => Input.GetKey(KeyCode.D);
         private bool OnUp => Input.GetKey(KeyCode.W);
         private bool OnDown => Input.GetKey(KeyCode.S);
+        private bool OnSpace => Input.GetKeyDown(KeyCode.Space);
 
         #endregion
 
@@ -47,7 +49,6 @@ namespace _Workspace.Scripts.Player
 
         private void Start()
         {
-            ApplyVariables();
             PlayAnimationForState(MovementState.Idle);
         }
 
@@ -55,20 +56,6 @@ namespace _Workspace.Scripts.Player
         {
             HandleInput();
             HandleMovement();
-        }
-
-        private void OnDrawGizmos()
-        {
-            // foreach (var rayPoint in rayPoints)
-            // {
-            //     Gizmos.DrawRay(rayPoint.transform.position,Vector2.right * _rayDistance);
-            //     Gizmos.DrawRay(rayPoint.transform.position,Vector2.left * _rayDistance);
-            //     Gizmos.DrawRay(rayPoint.transform.position,Vector2.up * _rayDistance);
-            //     Gizmos.DrawRay(rayPoint.transform.position,Vector2.down * _rayDistance);    
-            // }
-            
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(transform.position, _rayDistance);
         }
 
         #endregion
@@ -101,6 +88,9 @@ namespace _Workspace.Scripts.Player
                 AddInput(MovementState.WalkingDown);
             else
                 RemoveInput(MovementState.WalkingDown);
+
+            if (OnSpace)
+                DropBomb();
         }
         private void AddInput(MovementState state)
         {
@@ -168,20 +158,21 @@ namespace _Workspace.Scripts.Player
                     break;
             }
             
-            rigidbody2D.velocity = direction * _movementSpeed;
+            rigidbody2D.velocity = direction * playerVariables.movementSpeed;
         }
         
 
         #endregion
 
-        #region Player Variables
+        #region Bomb Functions
 
-        private void ApplyVariables()
+        private void DropBomb()
         {
-            _movementSpeed = playerVariables.movementSpeed;
-            _bombRegenDuration = playerVariables.bombRegenDuration;
-            _obstacleMask = playerVariables.obstacleLayers;
-            _bombCapacity = playerVariables.bombCapacity;
+            Vector2 position = transform.position;
+            position = gridManager.GetTileCenterWithPosition(position);
+            
+            BaseBomb bomb = Instantiate(standardBombPrefab, position, Quaternion.identity);
+            bomb.StartTimer().Forget();
         }
 
         #endregion
