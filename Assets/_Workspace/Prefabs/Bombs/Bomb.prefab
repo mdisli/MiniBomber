@@ -53,6 +53,7 @@ MonoBehaviour:
   - {fileID: -1902917897002446259, guid: 975894a97cf0594469745d6e9e8bd8e0, type: 3}
   - {fileID: -5839540051515997725, guid: 975894a97cf0594469745d6e9e8bd8e0, type: 3}
   - {fileID: -5337159410277229379, guid: 975894a97cf0594469745d6e9e8bd8e0, type: 3}
+  explosionPrefab: {fileID: 8641699523219369188, guid: 82486aa73b330444290108ffa98a7b4c, type: 3}
 --- !u!114 &611578075265704233
 MonoBehaviour:
   m_ObjectHideFlags: 0

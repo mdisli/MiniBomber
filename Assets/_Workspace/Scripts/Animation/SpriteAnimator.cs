@@ -26,10 +26,11 @@ namespace _Workspace.Scripts.Animation
 
         public void SetSpriteList(Sprite[] newSpriteList) => this.spriteList = newSpriteList;
 
-        public void StartAnimation()
+        public async UniTask StartAnimationAsync(Action onComplete=null)
         {
             StopAnimation();
-            AnimateSpriteRenderer(_cancellationTokenSource.Token).Forget();
+            await AnimateSpriteRenderer(_cancellationTokenSource.Token);
+            onComplete?.Invoke();
         }
 
         public void StopAnimation()
@@ -59,7 +60,11 @@ namespace _Workspace.Scripts.Animation
             {
                 if (spriteIndex >= spriteList.Length)
                 {
-                    if(!isLooping) break;
+                    if (!isLooping)
+                    {
+                        targetSpriteRenderer.sprite = null;
+                        break;
+                    }
                     spriteIndex = 0;
                 }
                 targetSpriteRenderer.sprite = spriteList[spriteIndex];

@@ -128,7 +128,7 @@ namespace _Workspace.Scripts.Player
                 _ => idleWalkSprites
             });
             
-            spriteAnimator.StartAnimation();
+            spriteAnimator.StartAnimationAsync().Forget();
         }
 
         #endregion

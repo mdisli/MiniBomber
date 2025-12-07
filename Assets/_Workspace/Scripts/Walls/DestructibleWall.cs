@@ -1,8 +1,9 @@
+using _Workspace.Scripts.Interfaces;
 using UnityEngine;
 
 namespace _Workspace.Scripts.Walls
 {
-    public class DestructibleWall : MonoBehaviour
+    public class DestructibleWall : MonoBehaviour, IDamageable
     {
         #region Variables
 
@@ -22,6 +23,19 @@ namespace _Workspace.Scripts.Walls
             _orderInLayer = orderInLayer;
             
             wallRenderer.sortingOrder = _orderInLayer;
+        }
+
+        #endregion
+
+        #region IDamageable
+
+        public void TakeDamage(int amount)
+        {
+            _healthCount -= amount;
+            if (_healthCount <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
 
         #endregion
