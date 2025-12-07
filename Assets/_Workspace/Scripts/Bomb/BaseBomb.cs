@@ -41,6 +41,7 @@ namespace _Workspace.Scripts.Bomb
 
         public virtual void Explode()
         {
+            transform.localScale = Vector3.zero;
             Vector2 curPos = transform.position;
 
             var directions = bombVariables.bombDirections;
@@ -64,7 +65,7 @@ namespace _Workspace.Scripts.Bomb
 
         private void SpreadFire(Vector2 currentPosition,Vector2 direction, int range)
         {
-            currentPosition += direction;
+            
             for (int i = 0; i < range-1; i++)
             {
                 (bool canPass, RaycastHit2D hit) canExplosionPassThrough = CanExplosionPassThrough(currentPosition, direction); 
@@ -74,13 +75,13 @@ namespace _Workspace.Scripts.Bomb
                     damageable?.TakeDamage(bombVariables.damage);
                     return;
                 }
+                
+                currentPosition += direction;
 
                 // Eğer sonuncu değil ise ve bir sonraki noktaya geçebiliyor ise
-                bool canExplosionPassThroughNext = i < range - 2 && CanExplosionPassThrough(currentPosition + direction, direction).canPass; 
+                bool canExplosionPassThroughNext = i < range - 2 && CanExplosionPassThrough(currentPosition, direction).canPass; 
                 
                 ShowExplosion(direction,currentPosition, canExplosionPassThroughNext ? ExplosionState.Mid : ExplosionState.End);
-
-                currentPosition += direction;
             }
         }
 

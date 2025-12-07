@@ -35,7 +35,7 @@ namespace _Workspace.Scripts.Player
         [SerializeField] private BaseBomb standardBombPrefab;
         
         private MovementState _currentMovementState;
-        private List<MovementState> _inputStack = new List<MovementState>();
+        private readonly List<MovementState> _inputStack = new List<MovementState>();
         
         private bool OnLeft => Input.GetKey(KeyCode.A);
         private bool OnRight => Input.GetKey(KeyCode.D);
