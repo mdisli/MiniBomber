@@ -316,12 +316,9 @@ MonoBehaviour:
   idleWalkSprites:
   - {fileID: 864885269507524701, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
   playerVariables: {fileID: 11400000, guid: 4e6357eb0cdeb4efa9caf7e8ef12bcaf, type: 2}
+  inputEventSo: {fileID: 11400000, guid: fef28535fc43e475c801ea474451b23f, type: 2}
+  gridManager: {fileID: 0}
   rigidbody2D: {fileID: 3600141747240430753}
-  rayPoints:
-  - {fileID: 7793410115146157287}
-  - {fileID: 4001999219291425076}
-  - {fileID: 3094208258950685255}
-  - {fileID: 3968321807324103895}
   standardBombPrefab: {fileID: 3231306963192033429, guid: 8172f647cc1c64a2d9fea9292ce01aea, type: 3}
 --- !u!114 &7829152184224774246
 MonoBehaviour:

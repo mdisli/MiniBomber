@@ -24,6 +24,7 @@ namespace _Workspace.Scripts.Player
 
         [Header("So References")]
         [SerializeField] private PlayerVariables playerVariables;
+        [SerializeField] private InputEventSo inputEventSo;
 
         [Header("Other References")] 
         [SerializeField] private GridManager gridManager;
@@ -35,12 +36,8 @@ namespace _Workspace.Scripts.Player
         [SerializeField] private BaseBomb standardBombPrefab;
         
         private MovementState _currentMovementState;
-        private readonly List<MovementState> _inputStack = new List<MovementState>();
+        [SerializeField]private List<MovementState> _inputStack = new List<MovementState>();
         
-        private bool OnLeft => Input.GetKey(KeyCode.A);
-        private bool OnRight => Input.GetKey(KeyCode.D);
-        private bool OnUp => Input.GetKey(KeyCode.W);
-        private bool OnDown => Input.GetKey(KeyCode.S);
         private bool OnSpace => Input.GetKeyDown(KeyCode.Space);
 
         #endregion
@@ -55,7 +52,21 @@ namespace _Workspace.Scripts.Player
         private void Update()
         {
             HandleInput();
+            UpdateState();
             HandleMovement();
+            
+        }
+
+        private void OnEnable()
+        {
+            inputEventSo.OnButtonPressed += InputEventSo_OnButtonPressed;
+            inputEventSo.OnButtonReleased += InputEventSo_OnButtonReleased;
+        }
+
+        private void OnDisable()
+        {
+            inputEventSo.OnButtonPressed -= InputEventSo_OnButtonPressed;
+            inputEventSo.OnButtonReleased -= InputEventSo_OnButtonReleased;
         }
 
         #endregion
@@ -64,29 +75,24 @@ namespace _Workspace.Scripts.Player
 
         private void HandleInput()
         {
-            var rightMove = OnRight;
-            var leftMove = OnLeft;
-            var upMove = OnUp;
-            var downMove = OnDown;
-            
-            if(rightMove) 
+            if(Input.GetKeyDown(KeyCode.D)) 
                 AddInput(MovementState.WalkingRight);
-            else 
+            else if(Input.GetKeyUp(KeyCode.D))
                 RemoveInput(MovementState.WalkingRight);
             
-            if(leftMove) 
+            if(Input.GetKeyDown(KeyCode.A)) 
                 AddInput(MovementState.WalkingLeft);
-            else
+            else if(Input.GetKeyUp(KeyCode.A))
                 RemoveInput(MovementState.WalkingLeft);
             
-            if(upMove)
+            if(Input.GetKeyDown(KeyCode.W))
                 AddInput(MovementState.WalkingUp);
-            else
+            else if(Input.GetKeyUp(KeyCode.W))
                 RemoveInput(MovementState.WalkingUp);
             
-            if(downMove)
+            if(Input.GetKeyDown(KeyCode.S))
                 AddInput(MovementState.WalkingDown);
-            else
+            else if(Input.GetKeyUp(KeyCode.S))
                 RemoveInput(MovementState.WalkingDown);
 
             if (OnSpace)
@@ -96,14 +102,13 @@ namespace _Workspace.Scripts.Player
         {
             if (_inputStack.Contains(state)) return;
             _inputStack.Add(state); 
-            UpdateState();
+            
         }
 
         private void RemoveInput(MovementState state)
         {
             if (!_inputStack.Contains(state)) return;
             _inputStack.Remove(state);
-            UpdateState();
         }
 
         private void UpdateState()
@@ -159,6 +164,8 @@ namespace _Workspace.Scripts.Player
             }
             
             rigidbody2D.velocity = direction * playerVariables.movementSpeed;
+            // Vector2 targetPosition = (Vector2)transform.position + (direction * (playerVariables.movementSpeed * Time.deltaTime));
+            // rigidbody2D.MovePosition(targetPosition);
         }
         
 
@@ -173,6 +180,51 @@ namespace _Workspace.Scripts.Player
             
             BaseBomb bomb = Instantiate(standardBombPrefab, position, Quaternion.identity);
             bomb.StartTimer().Forget();
+        }
+
+        #endregion
+
+        #region Callbacks
+
+        private void InputEventSo_OnButtonReleased(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Right:
+                    RemoveInput(MovementState.WalkingRight);
+                    break;
+                case ButtonType.Left:
+                    RemoveInput(MovementState.WalkingLeft);
+                    break;
+                case ButtonType.Up:
+                    RemoveInput(MovementState.WalkingUp);
+                    break;
+                case ButtonType.Down:
+                    RemoveInput(MovementState.WalkingDown);
+                    break;
+            }
+        }
+
+        private void InputEventSo_OnButtonPressed(ButtonType buttonType)
+        {
+            switch (buttonType)
+            {
+                case ButtonType.Right:
+                    AddInput(MovementState.WalkingRight);
+                    break;
+                case ButtonType.Left:
+                    AddInput(MovementState.WalkingLeft);
+                    break;
+                case ButtonType.Up:
+                    AddInput(MovementState.WalkingUp);
+                    break;
+                case ButtonType.Down:
+                    AddInput(MovementState.WalkingDown);
+                    break;
+                case ButtonType.Bomb:
+                    DropBomb();
+                    break;
+            }
         }
 
         #endregion
