@@ -27,7 +27,7 @@ namespace _Workspace.Scripts.Bomb
 
         #region Virtual Methods
 
-        public virtual async UniTask StartTimer()
+        public virtual async UniTask StartTimer(Action onExplode=null)
         {
             spriteAnimator.StartAnimationAsync(countDownAnimationSprites).Forget();
 
@@ -35,12 +35,12 @@ namespace _Workspace.Scripts.Bomb
             
             spriteAnimator.StopAnimation();
 
+            onExplode?.Invoke();
             Explode();
         }
 
         protected virtual void Explode()
         {
-            transform.localScale = Vector3.zero;
             Vector2 curPos = transform.position;
 
             var directions = bombVariables.bombDirections;
@@ -64,7 +64,6 @@ namespace _Workspace.Scripts.Bomb
 
         private void SpreadFire(Vector2 currentPosition,Vector2 direction, int range)
         {
-            
             for (int i = 0; i < range-1; i++)
             {
                 (bool canPass, RaycastHit2D hit) canExplosionPassThrough = CanExplosionPassThrough(currentPosition, direction); 

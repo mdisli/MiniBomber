@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using _Workspace.Scripts.Animation;
+using _Workspace.Scripts.Bomb;
 using _Workspace.Scripts.Grid_System;
 using _Workspace.Scripts.Scriptable_Objects;
 using Cysharp.Threading.Tasks;
@@ -28,10 +29,12 @@ namespace _Workspace.Scripts.Enemy
         [SerializeField] private GridManager gridManager;
 
         [Header("So References")] 
-        [SerializeField] private EnemyVariables enemyVariables;
+        [SerializeField] private PlayerVariables enemyVariables;
         
         [Header("Movement")]
         [SerializeField] private Rigidbody2D rigidbody2D;
+
+        [Header("Bomb")] [SerializeField] private BombBag bombBag;
 
         //Direction control
         private List<EnemyRoute> _availableTargetPoints = new List<EnemyRoute>(4);
@@ -43,7 +46,8 @@ namespace _Workspace.Scripts.Enemy
 
         private async void Start()
         {
-            await UniTask.Delay(1500);
+            bombBag.Initialize(gridManager,enemyVariables);
+            await UniTask.Delay(500);
             Move().Forget();
         }
 
@@ -73,7 +77,7 @@ namespace _Workspace.Scripts.Enemy
         }
         private EnemyRoute CheckRouteAvailable(Vector2 origin,Vector2 direction)
         {
-            RaycastHit2D hit = Physics2D.Raycast(origin, direction, Mathf.Infinity,enemyVariables.obstacleMask);
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, Mathf.Infinity,enemyVariables.obstacleLayers);
 
             if (hit.collider == null) return new EnemyRoute()
             {

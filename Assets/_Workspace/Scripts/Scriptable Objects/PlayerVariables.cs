@@ -10,7 +10,6 @@ namespace _Workspace.Scripts.Scriptable_Objects
         public LayerMask obstacleLayers;
 
         [Header("Bomb")] 
-        public int bombCapacity = 1;
         public float bombRegenDuration = 3;
     }
 }

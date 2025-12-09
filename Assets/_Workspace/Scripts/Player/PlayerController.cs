@@ -33,7 +33,7 @@ namespace _Workspace.Scripts.Player
         [SerializeField] private Rigidbody2D rigidbody2D;
         
         [Header("Bomb")] 
-        [SerializeField] private BaseBomb standardBombPrefab;
+        [SerializeField] private BombBag bombBag;
         
         private MovementState _currentMovementState;
         [SerializeField]private List<MovementState> _inputStack = new List<MovementState>();
@@ -46,6 +46,7 @@ namespace _Workspace.Scripts.Player
 
         private void Start()
         {
+            bombBag.Initialize(gridManager,playerVariables);
             PlayAnimationForState(MovementState.Idle);
         }
 
@@ -96,7 +97,7 @@ namespace _Workspace.Scripts.Player
                 RemoveInput(MovementState.WalkingDown);
 
             if (OnSpace)
-                DropBomb();
+                bombBag.DropBomb();
         }
         private void AddInput(MovementState state)
         {
@@ -170,19 +171,7 @@ namespace _Workspace.Scripts.Player
         
 
         #endregion
-
-        #region Bomb Functions
-
-        private void DropBomb()
-        {
-            Vector2 position = transform.position;
-            position = gridManager.GetTileCenterWithPosition(position);
-            
-            BaseBomb bomb = Instantiate(standardBombPrefab, position, Quaternion.identity);
-            bomb.StartTimer().Forget();
-        }
-
-        #endregion
+        
 
         #region Callbacks
 
@@ -222,7 +211,7 @@ namespace _Workspace.Scripts.Player
                     AddInput(MovementState.WalkingDown);
                     break;
                 case ButtonType.Bomb:
-                    DropBomb();
+                    bombBag.DropBomb();
                     break;
             }
         }
