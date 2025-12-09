@@ -82,27 +82,25 @@ namespace _Workspace.Scripts.Enemy
             
             Vector2 hitPosition = hit.point;
                 
-            var targetTilePosition = gridManager.GetTileCenterWithPosition(hitPosition);
+            var targetTilePosition = gridManager.GetTileCenterWithPosition(hitPosition); // engel olan tile
 
             float targetDistance = Vector2.Distance(targetTilePosition, (Vector2)transform.position);
-            if (targetDistance >= 1.45f)
-            {
-                targetTilePosition -= direction;
+            if (!(targetDistance >= 1.45f))
                 return new EnemyRoute()
                 {
-                    distance = targetDistance,
-                    isAvailable = true,
-                    targetPoint = targetTilePosition,
-                    direction = direction
+                    isAvailable = false
                 };
-                
-            }
-
+            
+            targetTilePosition -= direction; // engelden bir önceki tile
+            
             return new EnemyRoute()
             {
-                isAvailable = false
+                distance = targetDistance,
+                isAvailable = true,
+                targetPoint = targetTilePosition,
+                direction = direction
             };
-            
+
         }
         private EnemyRoute ChooseRoute()
         {
