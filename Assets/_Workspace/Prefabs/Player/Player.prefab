@@ -256,7 +256,7 @@ GameObject:
   - component: {fileID: 7829152184224774246}
   - component: {fileID: 3600141747240430753}
   - component: {fileID: 1751175856441021838}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7976052760273610222}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.503, y: -0.47, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -316,12 +316,20 @@ MonoBehaviour:
   - {fileID: -6858737447367745198, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
   idleWalkSprites:
   - {fileID: 864885269507524701, guid: 5a44b023eba74f54893b3d9219669e40, type: 3}
+  deathSprites:
+  - {fileID: 9061564225531320464, guid: c415efa76a7dc874eb8c314ef592c53c, type: 3}
+  - {fileID: 3862607238810521850, guid: c415efa76a7dc874eb8c314ef592c53c, type: 3}
+  - {fileID: 479457306978580541, guid: c415efa76a7dc874eb8c314ef592c53c, type: 3}
+  - {fileID: -7169762821451724265, guid: c415efa76a7dc874eb8c314ef592c53c, type: 3}
+  - {fileID: 3354536886591382721, guid: c415efa76a7dc874eb8c314ef592c53c, type: 3}
+  - {fileID: 1202035036404113159, guid: c415efa76a7dc874eb8c314ef592c53c, type: 3}
   playerVariables: {fileID: 11400000, guid: 4e6357eb0cdeb4efa9caf7e8ef12bcaf, type: 2}
   inputEventSo: {fileID: 11400000, guid: fef28535fc43e475c801ea474451b23f, type: 2}
+  gameEventSo: {fileID: 11400000, guid: b83f8babfc96d41c9bd4ac904e68f42d, type: 2}
   gridManager: {fileID: 0}
   rigidbody2D: {fileID: 3600141747240430753}
+  circleCollider2D: {fileID: 1751175856441021838}
   bombBag: {fileID: 3446197532544035096}
-  _inputStack: 
 --- !u!114 &7829152184224774246
 MonoBehaviour:
   m_ObjectHideFlags: 0

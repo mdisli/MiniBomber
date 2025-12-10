@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using _Workspace.Scripts.Animation;
 using _Workspace.Scripts.Bomb;
+using _Workspace.Scripts.Enemy;
 using _Workspace.Scripts.Grid_System;
+using _Workspace.Scripts.Interfaces;
 using _Workspace.Scripts.Scriptable_Objects;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Workspace.Scripts.Player
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IDamageable
     {
         #region Variables
 
@@ -21,31 +23,39 @@ namespace _Workspace.Scripts.Player
         [SerializeField] private Sprite[] upWalkSprites;
         [SerializeField] private Sprite[] downWalkSprites;
         [SerializeField] private Sprite[] idleWalkSprites;
+        [SerializeField] private Sprite[] deathSprites;
 
         [Header("So References")]
         [SerializeField] private PlayerVariables playerVariables;
         [SerializeField] private InputEventSo inputEventSo;
+        [SerializeField] private GameEventSo gameEventSo;
 
         [Header("Other References")] 
         [SerializeField] private GridManager gridManager;
 
         [Header("Movement")] 
         [SerializeField] private Rigidbody2D rigidbody2D;
+        [SerializeField] private CircleCollider2D circleCollider2D;
+        private bool _canMove;
         
         [Header("Bomb")] 
         [SerializeField] private BombBag bombBag;
         
         private MovementState _currentMovementState;
-        [SerializeField]private List<MovementState> _inputStack = new List<MovementState>();
+        private readonly List<MovementState> _inputStack = new List<MovementState>();
         
+        // Health
+        private int _healthCount;
         private bool OnSpace => Input.GetKeyDown(KeyCode.Space);
-
+        
         #endregion
 
         #region Unity Funcs
 
         private void Start()
         {
+            _healthCount = playerVariables.healthCount;
+            
             bombBag.Initialize(gridManager,playerVariables);
             PlayAnimationForState(MovementState.Idle);
         }
@@ -62,12 +72,20 @@ namespace _Workspace.Scripts.Player
         {
             inputEventSo.OnButtonPressed += InputEventSo_OnButtonPressed;
             inputEventSo.OnButtonReleased += InputEventSo_OnButtonReleased;
+
+            gameEventSo.OnGameStart += GameEventSo_OnGameStart;
+            gameEventSo.OnGameFinish += GameEventSo_OnGameFinish;
+            gameEventSo.OnGameOver += GameEventSo_OnGameOver;
         }
 
         private void OnDisable()
         {
             inputEventSo.OnButtonPressed -= InputEventSo_OnButtonPressed;
             inputEventSo.OnButtonReleased -= InputEventSo_OnButtonReleased;
+            
+            gameEventSo.OnGameStart -= GameEventSo_OnGameStart;
+            gameEventSo.OnGameFinish -= GameEventSo_OnGameFinish;
+            gameEventSo.OnGameOver -= GameEventSo_OnGameOver;
         }
 
         #endregion
@@ -76,6 +94,8 @@ namespace _Workspace.Scripts.Player
 
         private void HandleInput()
         {
+            if(gameEventSo.GameState is not GameState.Started) return;
+            
             if(Input.GetKeyDown(KeyCode.D)) 
                 AddInput(MovementState.WalkingRight);
             else if(Input.GetKeyUp(KeyCode.D))
@@ -105,7 +125,6 @@ namespace _Workspace.Scripts.Player
             _inputStack.Add(state); 
             
         }
-
         private void RemoveInput(MovementState state)
         {
             if (!_inputStack.Contains(state)) return;
@@ -114,6 +133,8 @@ namespace _Workspace.Scripts.Player
 
         private void UpdateState()
         {
+            if(gameEventSo.GameState is not GameState.Started) return;
+            
             MovementState newState = _inputStack.Count > 0 ? _inputStack.Last() : MovementState.Idle;
 
             if (newState == _currentMovementState) return;
@@ -121,7 +142,6 @@ namespace _Workspace.Scripts.Player
             _currentMovementState = newState;
             PlayAnimationForState(_currentMovementState);
         }
-
         private void PlayAnimationForState(MovementState movementState)
         {
             var spriteSet = movementState switch
@@ -175,6 +195,7 @@ namespace _Workspace.Scripts.Player
 
         #region Callbacks
 
+        // Input Callbacks
         private void InputEventSo_OnButtonReleased(ButtonType buttonType)
         {
             switch (buttonType)
@@ -193,7 +214,6 @@ namespace _Workspace.Scripts.Player
                     break;
             }
         }
-
         private void InputEventSo_OnButtonPressed(ButtonType buttonType)
         {
             switch (buttonType)
@@ -216,7 +236,53 @@ namespace _Workspace.Scripts.Player
             }
         }
 
+        // Game Callbacks
+        private void GameEventSo_OnGameOver()
+        {
+            _canMove = false;
+        }
+
+        private void GameEventSo_OnGameFinish()
+        {
+            _canMove = false;
+        }
+
+        private void GameEventSo_OnGameStart()
+        {
+            _canMove = true;
+        }
         #endregion
+
+        public void TakeDamage(int amount)
+        {
+            _healthCount -= amount;
+            _healthCount = Mathf.Clamp(_healthCount, 0, int.MaxValue);
+
+            if (_healthCount <= 0)
+            {
+                Die();
+            }
+        }
+        
+        private void Die()
+        {
+            gameEventSo.InvokeGameOver();
+            
+            circleCollider2D.enabled = false;
+            rigidbody2D.simulated = false;
+            spriteAnimator.ChangeLoopStatus(false);
+            
+            spriteAnimator.StartAnimationAsync(deathSprites, onComplete: () =>
+            {
+                Destroy(gameObject);
+            }).Forget();
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if(other.gameObject.GetComponent<BaseEnemy>() is not null)
+                Die();
+        }
     }
 
     [Serializable]

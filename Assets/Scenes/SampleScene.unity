@@ -4764,7 +4764,7 @@ GameObject:
   - component: {fileID: 1481800342442759138}
   - component: {fileID: 5314406136650876709}
   - component: {fileID: 6952353622667755018}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5094,9 +5094,17 @@ MonoBehaviour:
   - {fileID: -3943012843671661309, guid: 04de33a67ba00214b84817677eab986e, type: 3}
   idleSprites:
   - {fileID: 7745408500511208834, guid: 04de33a67ba00214b84817677eab986e, type: 3}
+  deathSprites:
+  - {fileID: -4694725717360533878, guid: 8dc4bdce2aab4b4479a5a9125129a18e, type: 3}
+  - {fileID: -4749532302147318033, guid: 8dc4bdce2aab4b4479a5a9125129a18e, type: 3}
+  - {fileID: 8523583023012237371, guid: 8dc4bdce2aab4b4479a5a9125129a18e, type: 3}
+  - {fileID: -4947359789770691691, guid: 8dc4bdce2aab4b4479a5a9125129a18e, type: 3}
+  - {fileID: -5712558760839009981, guid: 8dc4bdce2aab4b4479a5a9125129a18e, type: 3}
+  - {fileID: -837757735263584995, guid: 8dc4bdce2aab4b4479a5a9125129a18e, type: 3}
   gridManager: {fileID: 1814920347}
   enemyVariables: {fileID: 11400000, guid: 412a8f83567c54ec4a9000a7d34b8e0a, type: 2}
   rigidbody2D: {fileID: 5314406136650876709}
+  circleCollider2D: {fileID: 6952353622667755018}
   bombBag: {fileID: 648585374}
 --- !u!1 &7121847242541175702
 GameObject:

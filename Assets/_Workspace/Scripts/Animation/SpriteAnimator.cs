@@ -39,7 +39,6 @@ namespace _Workspace.Scripts.Animation
             
             onComplete?.Invoke();
         }
-
         public void StopAnimation()
         {
             if (_cancellationTokenSource is not null)
@@ -50,6 +49,10 @@ namespace _Workspace.Scripts.Animation
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
+        public void ChangeLoopStatus(bool status)
+        {
+            isLooping = status;
+        }
         #endregion
 
         #region Unity Funcs

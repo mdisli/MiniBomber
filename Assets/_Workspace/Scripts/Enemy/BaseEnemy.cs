@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using _Workspace.Scripts.Animation;
 using _Workspace.Scripts.Bomb;
 using _Workspace.Scripts.Grid_System;
+using _Workspace.Scripts.Interfaces;
 using _Workspace.Scripts.Scriptable_Objects;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 
 namespace _Workspace.Scripts.Enemy
 {
-    public abstract class BaseEnemy : MonoBehaviour
+    public abstract class BaseEnemy : MonoBehaviour, IDamageable
     {
         #region Variables
 
@@ -24,6 +24,7 @@ namespace _Workspace.Scripts.Enemy
         [SerializeField] private Sprite[] upWalkSprites;
         [SerializeField] private Sprite[] downWalkSprites;
         [SerializeField] private Sprite[] idleSprites;
+        [SerializeField] private Sprite[] deathSprites;
         
         [Header("Other References")]
         [SerializeField] private GridManager gridManager;
@@ -33,19 +34,23 @@ namespace _Workspace.Scripts.Enemy
         
         [Header("Movement")]
         [SerializeField] private Rigidbody2D rigidbody2D;
+        [SerializeField] private CircleCollider2D circleCollider2D;
 
         [Header("Bomb")] [SerializeField] private BombBag bombBag;
 
         //Direction control
         private List<EnemyRoute> _availableTargetPoints = new List<EnemyRoute>(4);
-        
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+        private int _healthCount;
         #endregion
 
         #region Unity Funcs
 
         private async void Start()
         {
+            _healthCount = enemyVariables.healthCount;
+            
             bombBag.Initialize(gridManager,enemyVariables);
             await UniTask.Delay(500);
             Move().Forget();
@@ -139,6 +144,30 @@ namespace _Workspace.Scripts.Enemy
             else return idleSprites;
         }
         #endregion
+
+        public void TakeDamage(int amount)
+        {
+            _healthCount -= amount;
+            _healthCount = Mathf.Clamp(_healthCount, 0, int.MaxValue);
+
+            if (_healthCount <= 0)
+            {
+                Die();
+            }
+        }
+
+        private void Die()
+        {
+            circleCollider2D.enabled = false;
+            rigidbody2D.simulated = false;
+            spriteAnimator.ChangeLoopStatus(false);
+            _cancellationTokenSource.Cancel();
+            
+            spriteAnimator.StartAnimationAsync(deathSprites, onComplete: () =>
+            {
+                Destroy(gameObject);
+            }).Forget();
+        }
     }
 
     [Serializable]
