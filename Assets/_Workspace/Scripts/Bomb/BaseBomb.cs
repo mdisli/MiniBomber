@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using _Workspace.Scripts.Animation;
 using _Workspace.Scripts.Bomb.Explosion;
 using _Workspace.Scripts.Interfaces;
@@ -12,26 +13,46 @@ namespace _Workspace.Scripts.Bomb
     {
         #region Variables
 
-        [Header("So References")] 
+        [Header("So References")]
         [SerializeField] protected BombVariables bombVariables;
 
-        [Header("Animation")] 
+        [Header("Animation")]
         [SerializeField] protected SpriteAnimator spriteAnimator;
         [SerializeField] protected Sprite[] countDownAnimationSprites;
 
 
         [Header("Explosion")]
         [SerializeField] private Explosion.Explosion explosionPrefab;
+
+        private CancellationTokenSource _cancellationTokenSource;
+        #endregion
+
+        #region Unity Funcs
+
+        private void OnEnable()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
+        private void OnDisable()
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
+        }
+
         #endregion
 
         #region Virtual Methods
 
-        public virtual async UniTask StartTimer(Action onExplode=null)
+        public virtual async UniTask StartTimer(Action onExplode = null)
         {
             spriteAnimator.StartAnimationAsync(countDownAnimationSprites).Forget();
 
-            await UniTask.Delay(TimeSpan.FromSeconds(bombVariables.explosionDelay));
-            
+            var isCancelled = await UniTask.Delay(TimeSpan.FromSeconds(bombVariables.explosionDelay), cancellationToken: _cancellationTokenSource.Token).SuppressCancellationThrow();
+
+            if (isCancelled) return;
+
             spriteAnimator.StopAnimation();
 
             onExplode?.Invoke();

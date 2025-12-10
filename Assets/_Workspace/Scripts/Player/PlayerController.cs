@@ -82,10 +82,15 @@ namespace _Workspace.Scripts.Player
         {
             inputEventSo.OnButtonPressed -= InputEventSo_OnButtonPressed;
             inputEventSo.OnButtonReleased -= InputEventSo_OnButtonReleased;
-            
+
             gameEventSo.OnGameStart -= GameEventSo_OnGameStart;
             gameEventSo.OnGameFinish -= GameEventSo_OnGameFinish;
             gameEventSo.OnGameOver -= GameEventSo_OnGameOver;
+        }
+
+        private void OnDestroy()
+        {
+            spriteAnimator.StopAnimation();
         }
 
         #endregion

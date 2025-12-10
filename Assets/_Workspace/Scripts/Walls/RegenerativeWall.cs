@@ -21,7 +21,8 @@ namespace _Workspace.Scripts.Walls
 
         private void OnDestroy()
         {
-            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
         }
 
         #endregion
@@ -41,22 +42,30 @@ namespace _Workspace.Scripts.Walls
 
         protected override void OnDamage()
         {
-            wallRenderer.DOFade((float)_currentHealthCount / _maxHealthCount, .1f).SetEase(Ease.Linear);
+            wallRenderer.DOFade((float)_currentHealthCount / _maxHealthCount, .1f).SetEase(Ease.Linear).SetLink(gameObject);
         }
 
         #endregion
         private async UniTask RemoveAndStartCountDownForRegenerateAsync()
         {
-            if(_cancellationTokenSource is null || _cancellationTokenSource.IsCancellationRequested)
-                _cancellationTokenSource = new CancellationTokenSource();
-            
-            wallCollider.enabled = false;
-            wallRenderer.DOFade(0, 0);
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
 
-            await wallRenderer.DOFade(1, _regenerateAfter).SetEase(Ease.Linear).WithCancellation(_cancellationTokenSource.Token);
-            
-            _currentHealthCount = _maxHealthCount;
-            wallCollider.enabled = true;
+            wallCollider.enabled = false;
+            wallRenderer.DOFade(0, 0).SetLink(gameObject);
+
+            try
+            {
+                await wallRenderer.DOFade(1, _regenerateAfter).SetEase(Ease.Linear).SetLink(gameObject).WithCancellation(_cancellationTokenSource.Token);
+
+                _currentHealthCount = _maxHealthCount;
+                wallCollider.enabled = true;
+            }
+            catch (System.OperationCanceledException)
+            {
+                // PlayMode çıkışında normal - ignore
+            }
         }
     }
 }

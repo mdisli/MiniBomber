@@ -26,18 +26,20 @@ namespace _Workspace.Scripts.Animation
 
         private void SetSpriteList(Sprite[] newSpriteList) => this.spriteList = newSpriteList;
 
-        public async UniTask StartAnimationAsync(Sprite[] spriteSet=null,Action onComplete=null, Action onStart=null)
+        public async UniTask StartAnimationAsync(Sprite[] spriteSet = null, Action onComplete = null, Action onStart = null)
         {
             StopAnimation();
-            
-            if(spriteSet is not null)
+
+            if (spriteSet is not null)
                 SetSpriteList(spriteSet);
-            
+
             onStart?.Invoke();
-            
-            await AnimateSpriteRenderer(_cancellationTokenSource.Token);
-            
-            onComplete?.Invoke();
+
+            var token = _cancellationTokenSource.Token;
+            await AnimateSpriteRenderer(token);
+
+            if (!token.IsCancellationRequested)
+                onComplete?.Invoke();
         }
         public void StopAnimation()
         {
@@ -59,7 +61,12 @@ namespace _Workspace.Scripts.Animation
 
         private void OnDestroy()
         {
-            StopAnimation();
+            if (_cancellationTokenSource is not null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
         }
 
         #endregion

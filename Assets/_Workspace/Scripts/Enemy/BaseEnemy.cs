@@ -51,15 +51,24 @@ namespace _Workspace.Scripts.Enemy
         private async void Start()
         {
             _healthCount = enemyVariables.healthCount;
-            
-            bombBag.Initialize(gridManager,enemyVariables);
-            await UniTask.Delay(500);
-            Move().Forget();
+
+            bombBag.Initialize(gridManager, enemyVariables);
+
+            try
+            {
+                await UniTask.Delay(500, cancellationToken: _cancellationTokenSource.Token);
+                Move().Forget();
+            }
+            catch (System.OperationCanceledException)
+            {
+                // PlayMode çıkışında normal - ignore
+            }
         }
 
         private void OnDestroy()
         {
             CancelMovement();
+            _cancellationTokenSource?.Dispose();
         }
 
         #endregion
@@ -126,16 +135,23 @@ namespace _Workspace.Scripts.Enemy
 
         private async UniTask Move()
         {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = new CancellationTokenSource();
-            
+
             while (!_cancellationTokenSource.IsCancellationRequested)
             {
                 FindAvailableRoutes();
-                
+
+                if (_availableTargetPoints.Count == 0) return;
+
                 EnemyRoute route = ChooseRoute();
 
                 spriteAnimator.StartAnimationAsync(GetSpriteSetWithDirection(route.direction)).Forget();
-                await transform.DOMove(route.targetPoint, route.distance / enemyVariables.movementSpeed).SetEase(Ease.Linear);
+                await transform.DOMove(route.targetPoint, route.distance / enemyVariables.movementSpeed)
+                    .SetEase(Ease.Linear)
+                    .SetLink(gameObject)
+                    .WithCancellation(_cancellationTokenSource.Token);
             }
         }
 

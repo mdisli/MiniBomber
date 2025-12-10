@@ -8,11 +8,20 @@ namespace _Workspace.Scripts.Bomb.Explosion
     {
         #region Variables
 
-        [Header("Animations")] 
+        [Header("Animations")]
         [SerializeField] private SpriteAnimator spriteAnimator;
         [SerializeField] private Sprite[] explosionStartSprites;
         [SerializeField] private Sprite[] explosionMiddleSprites;
         [SerializeField] private Sprite[] explosionEndSprites;
+
+        #endregion
+
+        #region Unity Funcs
+
+        private void OnDestroy()
+        {
+            spriteAnimator.StopAnimation();
+        }
 
         #endregion
 
@@ -27,7 +36,7 @@ namespace _Workspace.Scripts.Bomb.Explosion
                 ExplosionState.End => explosionEndSprites,
                 _ => explosionStartSprites
             };
-            
+
             spriteAnimator.StartAnimationAsync(
                 spriteSet:spriteSet,
                 onComplete:()=> Destroy(gameObject))

@@ -21,12 +21,12 @@ namespace _Workspace.Scripts.UI_Scripts.Screens
         public void OpenScreen()
         {
             transform.localScale = Vector3.one;
-            canvasGroup.DOFade(1, .3f).SetEase(Ease.Linear);
+            canvasGroup.DOFade(1, .3f).SetEase(Ease.Linear).SetLink(gameObject);
         }
 
         public void CloseScreen()
         {
-            canvasGroup.DOFade(1, .3f).SetEase(Ease.Linear)
+            canvasGroup.DOFade(1, .3f).SetEase(Ease.Linear).SetLink(gameObject)
                 .OnComplete(() =>
                 {
                     transform.localScale = Vector3.zero;

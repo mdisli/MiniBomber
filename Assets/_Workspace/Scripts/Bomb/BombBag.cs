@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using _Workspace.Scripts.Grid_System;
 using _Workspace.Scripts.Scriptable_Objects;
 using Cysharp.Threading.Tasks;
@@ -11,10 +12,10 @@ namespace _Workspace.Scripts.Bomb
     {
         #region Variables
 
-        [Header("Prefabs")] 
+        [Header("Prefabs")]
         [SerializeField] private BaseBomb standardBombPrefab;
 
-        [Header("Bombs")] 
+        [Header("Bombs")]
         [SerializeField] private List<BaseBomb> standardBombPool;
         [SerializeField] private List<BaseBomb> collectedSpecialBombList;
 
@@ -22,6 +23,7 @@ namespace _Workspace.Scripts.Bomb
         private Transform _bombParent;
         private PlayerVariables _playerVariables;
         private bool _canDropBomb = true;
+        private CancellationTokenSource _cancellationTokenSource;
         #endregion
 
         #region Initializing
@@ -55,9 +57,27 @@ namespace _Workspace.Scripts.Bomb
 
         private async void StartCountDownTimer()
         {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
+
             _canDropBomb = false;
-            await UniTask.Delay(TimeSpan.FromSeconds(_playerVariables.bombRegenDuration));
-            _canDropBomb = true;
+
+            try
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(_playerVariables.bombRegenDuration), cancellationToken: _cancellationTokenSource.Token);
+                _canDropBomb = true;
+            }
+            catch (OperationCanceledException)
+            {
+                // PlayMode çıkışında normal - ignore
+            }
+        }
+
+        private void OnDestroy()
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
         }
         #endregion
 

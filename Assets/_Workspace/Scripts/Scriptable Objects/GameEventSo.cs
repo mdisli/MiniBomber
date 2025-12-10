@@ -1,6 +1,9 @@
 using _Workspace.Scripts.Enemy;
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace _Workspace.Scripts.Scriptable_Objects
 {
@@ -8,7 +11,7 @@ namespace _Workspace.Scripts.Scriptable_Objects
     public class GameEventSo : ScriptableObject
     {
         #region Events
-        
+
         public event UnityAction OnGameStart;
         public event UnityAction OnGameFinish;
         public event UnityAction OnGameOver;
@@ -47,6 +50,39 @@ namespace _Workspace.Scripts.Scriptable_Objects
         public void InvokeRestartLevel() => OnRestartLevel?.Invoke();
 
         public void InvokeOnEnemyDeath(BaseEnemy enemy) => OnEnemyDeath?.Invoke(enemy);
+
+        #endregion
+
+        #region Editor PlayMode Cleanup
+
+        private void OnEnable()
+        {
+#if UNITY_EDITOR
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+#endif
+        }
+
+        private void OnDisable()
+        {
+#if UNITY_EDITOR
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+#endif
+        }
+
+#if UNITY_EDITOR
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.ExitingPlayMode)
+            {
+                OnGameStart = null;
+                OnGameFinish = null;
+                OnGameOver = null;
+                OnRestartLevel = null;
+                OnEnemyDeath = null;
+                GameState = default;
+            }
+        }
+#endif
 
         #endregion
     }

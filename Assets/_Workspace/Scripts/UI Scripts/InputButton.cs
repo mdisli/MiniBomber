@@ -52,15 +52,15 @@ namespace _Workspace.Scripts.UI_Scripts
 
         private void OnButtonClick()
         {
-            transform.DOScale(imageScaleOnClick, .1f).SetEase(Ease.Linear);
-            buttonImage.DOColor(imageColorOnClick,.1f).SetEase(Ease.Linear);
+            transform.DOScale(imageScaleOnClick, .1f).SetEase(Ease.Linear).SetLink(gameObject);
+            buttonImage.DOColor(imageColorOnClick, .1f).SetEase(Ease.Linear).SetLink(gameObject);
             inputEventSo.InvokeOnButtonPressed(buttonType);
         }
 
         private void OnButtonReleased()
         {
-            transform.DOScale(1, .1f).SetEase(Ease.Linear);
-            buttonImage.DOColor(_buttonImageStandardColor,.1f).SetEase(Ease.Linear);
+            transform.DOScale(1, .1f).SetEase(Ease.Linear).SetLink(gameObject);
+            buttonImage.DOColor(_buttonImageStandardColor, .1f).SetEase(Ease.Linear).SetLink(gameObject);
             inputEventSo.InvokeOnButtonReleased(buttonType);
         }
     }
