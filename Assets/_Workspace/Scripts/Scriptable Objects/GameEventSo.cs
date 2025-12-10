@@ -11,6 +11,8 @@ namespace _Workspace.Scripts.Scriptable_Objects
         public event UnityAction OnGameStart;
         public event UnityAction OnGameFinish;
         public event UnityAction OnGameOver;
+
+        public event UnityAction OnRestartLevel;
         
         public GameState GameState{get; private set;}
         #endregion
@@ -34,6 +36,8 @@ namespace _Workspace.Scripts.Scriptable_Objects
             OnGameOver?.Invoke();
             GameState = GameState.Failed;
         }
+        
+        public void InvokeRestartLevel() => OnRestartLevel?.Invoke();
 
         #endregion
     }

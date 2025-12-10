@@ -40,7 +40,7 @@ namespace _Workspace.Scripts.Enemy
 
         //Direction control
         private List<EnemyRoute> _availableTargetPoints = new List<EnemyRoute>(4);
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _cancellationTokenSource;
 
         private int _healthCount;
         #endregion
@@ -54,6 +54,11 @@ namespace _Workspace.Scripts.Enemy
             bombBag.Initialize(gridManager,enemyVariables);
             await UniTask.Delay(500);
             Move().Forget();
+        }
+
+        private void OnDestroy()
+        {
+            CancelMovement();
         }
 
         #endregion
@@ -120,6 +125,8 @@ namespace _Workspace.Scripts.Enemy
 
         private async UniTask Move()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            
             while (!_cancellationTokenSource.IsCancellationRequested)
             {
                 FindAvailableRoutes();
@@ -131,6 +138,11 @@ namespace _Workspace.Scripts.Enemy
             }
         }
 
+        private void CancelMovement()
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+        }
         private Sprite[] GetSpriteSetWithDirection(Vector2 direction)
         {
             if(direction == Vector2.left)
@@ -161,7 +173,7 @@ namespace _Workspace.Scripts.Enemy
             circleCollider2D.enabled = false;
             rigidbody2D.simulated = false;
             spriteAnimator.ChangeLoopStatus(false);
-            _cancellationTokenSource.Cancel();
+            CancelMovement();
             
             spriteAnimator.StartAnimationAsync(deathSprites, onComplete: () =>
             {
