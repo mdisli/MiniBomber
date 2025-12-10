@@ -56,12 +56,11 @@ namespace _Workspace.Scripts.Enemy
 
             try
             {
-                await UniTask.Delay(500, cancellationToken: _cancellationTokenSource.Token);
+                await UniTask.Delay(250, cancellationToken: _cancellationTokenSource.Token);
                 Move();
             }
             catch (System.OperationCanceledException)
             {
-                // PlayMode çıkışında normal - ignore
             }
         }
 
@@ -135,6 +134,9 @@ namespace _Workspace.Scripts.Enemy
 
         private void Move()
         {
+            if(Random.Range(0,100) % 2 == 0)
+                bombBag.DropBomb();
+            
             FindAvailableRoutes();
 
             if (_availableTargetPoints.Count == 0) return;
