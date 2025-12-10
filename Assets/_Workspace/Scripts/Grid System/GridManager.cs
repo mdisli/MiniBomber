@@ -70,7 +70,16 @@ namespace _Workspace.Scripts.Grid_System
         }
         public Bounds GetGridBounds()
         {
-            return groundAndWallsTilemap.localBounds; 
+            groundAndWallsTilemap.CompressBounds();
+            var cellBounds = groundAndWallsTilemap.cellBounds;
+            
+            var minWorld = groundAndWallsTilemap.CellToWorld(cellBounds.min);
+            var maxWorld = groundAndWallsTilemap.CellToWorld(cellBounds.max);
+
+            var center = (minWorld + maxWorld) / 2f;
+            var size = maxWorld - minWorld;
+
+            return new Bounds(center, size);
         }
         #endregion
     }

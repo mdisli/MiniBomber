@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using _Workspace.Scripts.Grid_System;
 using Cysharp.Threading.Tasks;
@@ -23,17 +24,24 @@ namespace _Workspace.Scripts.Managers
 
         private async void Start()
         {
-            _cam = Camera.main;
-            _cancellationTokenSource = new CancellationTokenSource();
-
             try
             {
-                await UniTask.Delay(5000, cancellationToken: _cancellationTokenSource.Token);
-                AdjustCameraSize();
+                _cam = Camera.main;
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                try
+                {
+                    await UniTask.Delay(100, cancellationToken: _cancellationTokenSource.Token);
+                    AdjustCameraSize();
+                }
+                catch (System.OperationCanceledException)
+                {
+                    // PlayMode çıkışında normal - ignore
+                }
             }
-            catch (System.OperationCanceledException)
+            catch (Exception e)
             {
-                // PlayMode çıkışında normal - ignore
+                throw; // TODO handle exception
             }
         }
 
@@ -57,18 +65,17 @@ namespace _Workspace.Scripts.Managers
             float targetHeight = bounds.size.y + _padding;
             float targetWidth = bounds.size.x + _padding;
             
-            float screenRatio = (float)Screen.width / (float)Screen.height; // Cihazın oranı
-            float targetRatio = targetWidth / targetHeight; // Haritanın oranı
+            float screenRatio = (float)Screen.width / (float)Screen.height;
+            float targetRatio = targetWidth / targetHeight;
             
             if (screenRatio >= targetRatio)
             {
-                _cam.DOOrthoSize(targetHeight / 2f, .3f).SetEase(Ease.Linear).SetLink(gameObject);
+                _cam.DOOrthoSize(targetHeight / 2f, .1f).SetEase(Ease.Linear).SetLink(gameObject);
             }
             else
             {
                 float differenceInSize = targetRatio / screenRatio;
-                // _cam.orthographicSize = (targetHeight / 2f) * differenceInSize;
-                _cam.DOOrthoSize((targetHeight / 2f) * differenceInSize, .3f).SetEase(Ease.Linear).SetLink(gameObject);
+                _cam.DOOrthoSize((targetHeight / 2f) * differenceInSize, .1f).SetEase(Ease.Linear).SetLink(gameObject);
             }
         }
 

@@ -57,7 +57,7 @@ namespace _Workspace.Scripts.Enemy
             try
             {
                 await UniTask.Delay(500, cancellationToken: _cancellationTokenSource.Token);
-                Move().Forget();
+                Move();
             }
             catch (System.OperationCanceledException)
             {
@@ -67,7 +67,7 @@ namespace _Workspace.Scripts.Enemy
 
         private void OnDestroy()
         {
-            CancelMovement();
+            _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
         }
 
@@ -133,34 +133,21 @@ namespace _Workspace.Scripts.Enemy
             return _availableTargetPoints[Random.Range(0, _availableTargetPoints.Count)];
         }
 
-        private async UniTask Move()
+        private void Move()
         {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = new CancellationTokenSource();
+            FindAvailableRoutes();
 
-            while (!_cancellationTokenSource.IsCancellationRequested)
-            {
-                FindAvailableRoutes();
+            if (_availableTargetPoints.Count == 0) return;
 
-                if (_availableTargetPoints.Count == 0) return;
+            EnemyRoute route = ChooseRoute();
 
-                EnemyRoute route = ChooseRoute();
-
-                spriteAnimator.StartAnimationAsync(GetSpriteSetWithDirection(route.direction)).Forget();
-                await transform.DOMove(route.targetPoint, route.distance / enemyVariables.movementSpeed)
-                    .SetEase(Ease.Linear)
-                    .SetLink(gameObject)
-                    .WithCancellation(_cancellationTokenSource.Token);
-            }
+            spriteAnimator.StartAnimationAsync(GetSpriteSetWithDirection(route.direction)).Forget();
+            transform.DOMove(route.targetPoint, route.distance / enemyVariables.movementSpeed)
+                .SetEase(Ease.Linear)
+                .SetLink(gameObject)
+                .OnComplete(Move);
         }
 
-        private void CancelMovement()
-        {
-            if(_cancellationTokenSource is null) return;
-            
-            _cancellationTokenSource.Cancel();
-        }
         private Sprite[] GetSpriteSetWithDirection(Vector2 direction)
         {
             if(direction == Vector2.left)
@@ -192,8 +179,8 @@ namespace _Workspace.Scripts.Enemy
             circleCollider2D.enabled = false;
             rigidbody2D.simulated = false;
             spriteAnimator.ChangeLoopStatus(false);
-            CancelMovement();
-            
+            transform.DOKill(); // Mevcut DOTween animasyonunu durdur
+
             spriteAnimator.StartAnimationAsync(deathSprites, onComplete: () =>
             {
                 Destroy(gameObject);

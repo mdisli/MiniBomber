@@ -77,23 +77,30 @@ namespace _Workspace.Scripts.Animation
                 Debug.LogWarning("SpriteList is null",gameObject);
                 return;
             }
-            
-            int spriteIndex = 0;
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                if (spriteIndex >= spriteList.Length)
-                {
-                    if (!isLooping)
-                    {
-                        targetSpriteRenderer.sprite = null;
-                        break;
-                    }
-                    spriteIndex = 0;
-                }
-                targetSpriteRenderer.sprite = spriteList[spriteIndex];
-                spriteIndex++;
 
-                await UniTask.Delay(TimeSpan.FromSeconds(animationFrameDuration), cancellationToken: cancellationToken);
+            try
+            {
+                int spriteIndex = 0;
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    if (spriteIndex >= spriteList.Length)
+                    {
+                        if (!isLooping)
+                        {
+                            targetSpriteRenderer.sprite = null;
+                            break;
+                        }
+                        spriteIndex = 0;
+                    }
+                    targetSpriteRenderer.sprite = spriteList[spriteIndex];
+                    spriteIndex++;
+
+                    await UniTask.Delay(TimeSpan.FromSeconds(animationFrameDuration), cancellationToken: cancellationToken);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // PlayMode çıkışında normal - ignore
             }
         }
     }
