@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 182aafa9cc9c48919d123532e6f1bd38, type: 3}
   m_Name: Enemy Variables
   m_EditorClassIdentifier: 
+  healthCount: 1
   movementSpeed: 5
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 192
-  bombCapacity: 3
   bombRegenDuration: 3

@@ -134,9 +134,6 @@ namespace _Workspace.Scripts.Enemy
 
         private void Move()
         {
-            if(Random.Range(0,100) % 2 == 0)
-                bombBag.DropBomb();
-            
             FindAvailableRoutes();
 
             if (_availableTargetPoints.Count == 0) return;
@@ -147,7 +144,12 @@ namespace _Workspace.Scripts.Enemy
             transform.DOMove(route.targetPoint, route.distance / enemyVariables.movementSpeed)
                 .SetEase(Ease.Linear)
                 .SetLink(gameObject)
-                .OnComplete(Move);
+                .OnComplete(()=>
+                {
+                    if(Random.Range(0,100) % 2 == 0)
+                        bombBag.DropBomb();
+                    Move();
+                });
         }
 
         private Sprite[] GetSpriteSetWithDirection(Vector2 direction)
