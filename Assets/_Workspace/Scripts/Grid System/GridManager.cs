@@ -68,6 +68,10 @@ namespace _Workspace.Scripts.Grid_System
             var tilePosition = groundAndWallsTilemap.WorldToCell(position);
             return groundAndWallsTilemap.GetCellCenterWorld(tilePosition);
         }
+        public Bounds GetGridBounds()
+        {
+            return groundAndWallsTilemap.localBounds; 
+        }
         #endregion
     }
 }
