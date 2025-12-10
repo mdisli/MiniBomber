@@ -1,3 +1,4 @@
+using _Workspace.Scripts.Enemy;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,6 +14,8 @@ namespace _Workspace.Scripts.Scriptable_Objects
         public event UnityAction OnGameOver;
 
         public event UnityAction OnRestartLevel;
+
+        public event UnityAction<BaseEnemy> OnEnemyDeath; 
         
         public GameState GameState{get; private set;}
         #endregion
@@ -27,17 +30,23 @@ namespace _Workspace.Scripts.Scriptable_Objects
 
         public void InvokeGameFinish()
         {
-            OnGameFinish?.Invoke();
+            if(GameState is not GameState.Started) return;
             GameState = GameState.Finished;
+            OnGameFinish?.Invoke();
+            
         }
 
         public void InvokeGameOver()
         {
-            OnGameOver?.Invoke();
+            if(GameState is not GameState.Started) return;
             GameState = GameState.Failed;
+            OnGameOver?.Invoke();
+            
         }
         
         public void InvokeRestartLevel() => OnRestartLevel?.Invoke();
+
+        public void InvokeOnEnemyDeath(BaseEnemy enemy) => OnEnemyDeath?.Invoke(enemy);
 
         #endregion
     }

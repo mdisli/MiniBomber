@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using _Workspace.Scripts.Enemy;
 using _Workspace.Scripts.Scriptable_Objects;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,9 +13,13 @@ namespace _Workspace.Scripts.Managers
         [Header("So References")] 
         [SerializeField] private GameEventSo gameEventSo;
 
+        [Header("Enemy References")] 
+        [SerializeField] private List<BaseEnemy> enemies;
         
         //Scene Management
         private AsyncOperation _sceneLoadOperation;
+        
+        
         #endregion
 
         #region Unity Funcs
@@ -30,11 +36,13 @@ namespace _Workspace.Scripts.Managers
         private void OnEnable()
         {
             gameEventSo.OnRestartLevel += GameEventSo_OnRestartLevel;
+            gameEventSo.OnEnemyDeath += GameEventSo_OnEnemyDeath;
         }
 
         private void OnDisable()
         {
             gameEventSo.OnRestartLevel -= GameEventSo_OnRestartLevel;
+            gameEventSo.OnEnemyDeath -= GameEventSo_OnEnemyDeath;
         }
 
         #endregion
@@ -61,6 +69,13 @@ namespace _Workspace.Scripts.Managers
             ChangeScene();
         }
 
+        private void GameEventSo_OnEnemyDeath(BaseEnemy arg0)
+        {
+            enemies.Remove(arg0);
+            
+            if(enemies.Count == 0)
+                gameEventSo.InvokeGameFinish();
+        }
         #endregion
     }
 }

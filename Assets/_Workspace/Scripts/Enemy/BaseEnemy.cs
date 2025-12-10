@@ -31,6 +31,7 @@ namespace _Workspace.Scripts.Enemy
 
         [Header("So References")] 
         [SerializeField] private PlayerVariables enemyVariables;
+        [SerializeField] private GameEventSo gameEventSo;
         
         [Header("Movement")]
         [SerializeField] private Rigidbody2D rigidbody2D;
@@ -40,7 +41,7 @@ namespace _Workspace.Scripts.Enemy
 
         //Direction control
         private List<EnemyRoute> _availableTargetPoints = new List<EnemyRoute>(4);
-        private CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private int _healthCount;
         #endregion
@@ -140,8 +141,9 @@ namespace _Workspace.Scripts.Enemy
 
         private void CancelMovement()
         {
+            if(_cancellationTokenSource is null) return;
+            
             _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
         }
         private Sprite[] GetSpriteSetWithDirection(Vector2 direction)
         {
@@ -170,6 +172,7 @@ namespace _Workspace.Scripts.Enemy
 
         private void Die()
         {
+            gameEventSo.InvokeOnEnemyDeath(this);
             circleCollider2D.enabled = false;
             rigidbody2D.simulated = false;
             spriteAnimator.ChangeLoopStatus(false);

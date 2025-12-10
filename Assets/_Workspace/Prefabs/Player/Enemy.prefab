@@ -121,7 +121,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3874958277646164102}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.5, y: 3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -175,6 +175,7 @@ MonoBehaviour:
   - {fileID: -837757735263584995, guid: 8dc4bdce2aab4b4479a5a9125129a18e, type: 3}
   gridManager: {fileID: 0}
   enemyVariables: {fileID: 11400000, guid: 412a8f83567c54ec4a9000a7d34b8e0a, type: 2}
+  gameEventSo: {fileID: 11400000, guid: b83f8babfc96d41c9bd4ac904e68f42d, type: 2}
   rigidbody2D: {fileID: 7951824625192263024}
   circleCollider2D: {fileID: 3004583043559484660}
   bombBag: {fileID: 6060685931355259942}
